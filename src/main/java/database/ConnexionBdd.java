@@ -6,6 +6,7 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,7 +32,7 @@ public class ConnexionBdd {
         }     
         try {
             //obtention de la connexion
-            connection= DriverManager.getConnection("jdbc:mariadb://172.20.177.250:3306/24LETTRES","ADM_LETTRES","mpSdis24Lettres");
+            connection= DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/sdis","root","");
             // te
             System.out.println("Connexion OK");
            
@@ -43,40 +44,43 @@ public class ConnexionBdd {
     }
    
     public static boolean verifierAuthentification(String email, String motDePasse) {
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        boolean authentifie = false;
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    boolean authentifie = false;
 
-        try {
-            conn = ouvrirConnexion();
-            stmt = conn.createStatement();
-            String sql = "SELECT COUNT(*) FROM compte WHERE email = '" + email + "' AND password = '" + motDePasse + "'";
-            rs = stmt.executeQuery(sql);
+    try {
+        conn = ouvrirConnexion();
+        // Utilisation de PreparedStatement pour éviter les injections SQL
+        String sql = "SELECT COUNT(*) FROM compte WHERE email = ? AND password = ?";
+        stmt = conn.prepareStatement(sql);
+        stmt.setString(1, email);
+        stmt.setString(2, motDePasse);
+        rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                int count = rs.getInt(1);
-                authentifie = count == 1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            fermerConnexion(rs);
-            fermerConnexion(stmt);
-            fermerConnexion(conn);
+        if (rs.next()) {
+            int count = rs.getInt(1);
+            authentifie = count == 1;
         }
-        return authentifie;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        fermerConnexion(rs);
+        fermerConnexion(stmt);
+        fermerConnexion(conn);
     }
+    return authentifie;
+}
     
     public static String recupererNomPrenomPompier(String email) {
-    Connection conn = null;
+    Connection cnx = null;
     Statement stmt = null;
     ResultSet rs = null;
     String nomPrenomPompier = "";
 
     try {
-        conn = ouvrirConnexion();
-        stmt = conn.createStatement();
+        cnx = ouvrirConnexion();
+        stmt = cnx.createStatement();
         String sql = "SELECT p.nom, p.prenom " +
                      "FROM compte c " +
                      "JOIN pompier p ON c.id = p.compte_id " +
@@ -93,20 +97,20 @@ public class ConnexionBdd {
     } finally {
         fermerConnexion(rs);
         fermerConnexion(stmt);
-        fermerConnexion(conn);
+        fermerConnexion(cnx);
     }
     return nomPrenomPompier;
 }
     
     public static String recupererGradePompier(String email) {
-    Connection conn = null;
+    Connection cnx = null;
     Statement stmt = null;
     ResultSet rs = null;
     String gradePompier = "";
 
     try {
-        conn = ouvrirConnexion();
-        stmt = conn.createStatement();
+        cnx = ouvrirConnexion();
+        stmt = cnx.createStatement();
         String sql = "SELECT g.libelle FROM grade g INNER JOIN pompier p ON g.id = p.grade_id INNER JOIN compte c ON p.compte_id = c.id WHERE c.email = '" + email + "'";
         rs = stmt.executeQuery(sql);
 
@@ -118,7 +122,7 @@ public class ConnexionBdd {
     } finally {
         fermerConnexion(rs);
         fermerConnexion(stmt);
-        fermerConnexion(conn);
+        fermerConnexion(cnx);
     }
     return gradePompier;
 }

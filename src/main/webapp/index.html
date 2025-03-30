@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Connexion</title>
+    <title>SDIS Web - Connexion</title>
     <meta charset="utf-8"/>
-    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: sans-serif;
+            font-family: 'Arial', sans-serif;
         }
 
         body {
@@ -18,71 +18,140 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            background-color: #f5f5f5;
         }
 
         .connexionhtml {
             display: flex;
             width: 80%;
-            justify-content: center;
-            align-items: center;
+            max-width: 900px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .cadre1 {
             background: white;
-            padding: 20px;
-            width: 30%;
-            height: 532px;
+            padding: 40px;
+            width: 60%;
             text-align: center;
         }
 
         .cadre1 h1 {
-            color: red;
-            font-size: 40px;
-            padding-right: 50px;
-            margin: 0;
+            color: #DA001B;
+            font-size: 32px;
+            margin-bottom: 30px;
         }
 
-        h3 {
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #DA001B;
             color: white;
-            font-size: 40px;
-            padding-right: 50px;
-            padding-top: 200px;
-            margin: 0;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 15px;
         }
 
-        .inscrire {
-            padding-left: 100px;
+        button:hover {
+            background-color: #b80016;
         }
 
         .rectangle {
-            background-color: red;
-            width: 35%;
-            height: 532px;
+            background-color: #DA001B;
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+        }
+
+        h3 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: #DA001B;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* Afficher le message d'erreur si le paramètre error est présent dans l'URL */
+        body.error .error-message {
+            display: block;
         }
     </style>
 </head>
-<body>
+<body id="bodyElement">
 <div class="connexionhtml">
     <div class="cadre1">
-        <br><br><br><br><br>
         <h1>Connexion</h1>
-        <br>
-        <br>
+        <div class="error-message" id="errorMessage">
+            Identifiants incorrects. Veuillez réessayer.
+        </div>
         <form action="connexion" method="post">
-            <label for="mail">Mail</label>
-            <input type="mail" id="mail" name="mail">
-            <br>
-            <br>
-            <label for="pass">Pass</label>
-            <input type="password" id="pass" name="pass">
-            <br>
-            <br>
+            <label for="mail">Email</label>
+            <input type="email" id="mail" name="mail" required placeholder="Votre email">
+            
+            <label for="pass">Mot de passe</label>
+            <input type="password" id="pass" name="pass" required placeholder="Votre mot de passe">
+            
             <button type="submit">Se connecter</button>
         </form>
+        <p style="margin-top: 20px; color: #666; font-size: 12px;">
+            Utilisateurs de test:<br>
+            admin@sdis.fr / admin<br>
+            user@sdis.fr / user
+        </p>
     </div>
     <div class="rectangle">
-        <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bonjour, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bon retour !</h3>
+        <div style="text-align: center;">
+            <svg class="logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM15.5 8C16.33 8 17 8.67 17 9.5C17 10.33 16.33 11 15.5 11C14.67 11 14 10.33 14 9.5C14 8.67 14.67 8 15.5 8ZM8.5 8C9.33 8 10 8.67 10 9.5C10 10.33 9.33 11 8.5 11C7.67 11 7 10.33 7 9.5C7 8.67 7.67 8 8.5 8ZM12 18C9.31 18 7.07 16.33 6 14H18C16.93 16.33 14.69 18 12 18Z" fill="white"/>
+            </svg>
+        </div>
+        <h3>Bonjour,<br>bon retour !</h3>
+        <p style="text-align: center; margin-top: 20px;">
+            Service Départemental<br>d'Incendie et de Secours
+        </p>
     </div>
 </div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+        document.getElementById('bodyElement').classList.add('error');
+    }
+</script>
 </body>
 </html>

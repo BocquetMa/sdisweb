@@ -32,7 +32,7 @@ public class InitConnexion implements ServletContextListener {
             try
             {
             //obtention de la connexion
-            cnx = DriverManager.getConnection("jdbc:mariadb://172.20.177.250:3306/24LETTRES" ,"ADM_LETTRES", "mpSdis24Lettres");
+            cnx = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sdis" ,"root", "");
             //sauvegarder la connexion dans le context te
             servletContext.setAttribute("connection",cnx);
             System.out.println("Connexion opérationnelle" + "jdbc:mariadb://127.0.0.1:3307/sdis");
